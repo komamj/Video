@@ -16,6 +16,7 @@
 package com.koma.video
 
 import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.support.v7.util.DiffUtil
@@ -28,7 +29,9 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.koma.video.base.BaseAdapter
 import com.koma.video.data.enities.VideoEntry
+import com.koma.video.play.PlayActivity
 import com.koma.video.util.GlideApp
+import com.koma.video.util.LogUtils
 
 class VideosAdapter(context: Context) : BaseAdapter<VideoEntry, VideosAdapter.VideosVH>(
     context = context,
@@ -42,25 +45,30 @@ class VideosAdapter(context: Context) : BaseAdapter<VideoEntry, VideosAdapter.Vi
         }
     }
 ) {
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VideosVH {
-        return VideosVH(
-            LayoutInflater.from(context).inflate(R.layout.video_item, parent, false)
-        )
-    }
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = VideosVH(
+        LayoutInflater.from(context).inflate(R.layout.video_item, parent, false)
+    )
 
     override fun onBindViewHolder(holder: VideosVH, position: Int) {
         val videoEntry = getItem(position)
+
+        bind(holder, videoEntry)
+    }
+
+    private fun bind(holder: VideosVH, entry: VideoEntry) {
         GlideApp.with(context)
             .asBitmap()
             .placeholder(ColorDrawable(Color.GRAY))
             .thumbnail(0.1f)
-            .load(videoEntry.uri)
+            .load(entry.uri)
             .into(holder.image)
-        holder.name.text = videoEntry.displayName
-        holder.duration.text = videoEntry.formatDuration
+
+        holder.name.text = entry.displayName
+
+        holder.duration.text = entry.formatDuration
     }
 
-    class VideosVH(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
+    inner class VideosVH(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
         val image: ImageView
         val duration: TextView
         val name: TextView
@@ -78,9 +86,14 @@ class VideosAdapter(context: Context) : BaseAdapter<VideoEntry, VideosAdapter.Vi
             when (view.id) {
                 R.id.iv_more -> {
                     val popupMenu = PopupMenu(view.context, view)
+                    popupMenu.menuInflater.inflate(R.menu.item_video_menu, popupMenu.menu)
+                    popupMenu.show()
                 }
                 else -> {
-
+                    val intent = Intent(context, PlayActivity::class.java)
+                    intent.putExtra(PlayActivity.KEY_MEDIA_ID, getItem(adapterPosition).id)
+                    LogUtils.i("",""+getItem(adapterPosition).id)
+                    context.startActivity(intent)
                 }
             }
         }

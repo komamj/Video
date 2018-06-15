@@ -13,15 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.koma.video.search
+package com.koma.video.play
 
-import com.koma.video.R
-import com.koma.video.base.BaseActivity
+import com.koma.video.data.source.VideoRepositoryComponent
+import com.koma.video.util.ActivityScoped
+import dagger.Component
 
-class SearchActivity : BaseActivity() {
-    override fun onPermissionGranted() {
-
-    }
-
-    override fun getLayoutId(): Int = R.layout.search_activity
+@ActivityScoped
+@Component(
+    dependencies = arrayOf(VideoRepositoryComponent::class),
+    modules = arrayOf(PlayPresenterModule::class)
+)
+interface PlayComponent {
+    fun inject(activity: PlayActivity)
 }

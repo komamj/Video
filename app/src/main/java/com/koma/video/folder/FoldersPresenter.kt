@@ -32,7 +32,7 @@ class FoldersPresenter @Inject constructor(
     }
 
     override fun subscribe() {
-        LogUtils.d(TAG, "sunbscribe")
+        LogUtils.d(TAG, "subscribe")
 
         loadBucketEntries()
     }

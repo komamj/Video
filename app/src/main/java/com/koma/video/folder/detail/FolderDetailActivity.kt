@@ -28,7 +28,7 @@ class FolderDetailActivity : BaseActivity() {
 
     override fun getLayoutId(): Int = R.layout.folder_detail_activity
 
-    override fun onPermissonGranted() {
+    override fun onPermissionGranted() {
         toolbar.title = intent.getStringExtra(BUCKET_NAME)
         setSupportActionBar(toolbar)
         supportActionBar?.run {

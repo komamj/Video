@@ -29,7 +29,7 @@ import kotlinx.android.synthetic.main.main_activity.*
 class MainActivity : BaseActivity() {
     override fun getLayoutId(): Int = R.layout.main_activity
 
-    override fun onPermissonGranted() {
+    override fun onPermissionGranted() {
         setSupportActionBar(toolbar)
 
         view_pager.currentItem = 0

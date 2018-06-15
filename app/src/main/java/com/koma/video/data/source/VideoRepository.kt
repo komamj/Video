@@ -16,6 +16,7 @@
 package com.koma.video.data.source
 
 import com.koma.video.data.enities.BucketEntry
+import com.koma.video.data.enities.VideoDetailEntry
 import com.koma.video.data.enities.VideoEntry
 import io.reactivex.Flowable
 import javax.inject.Inject
@@ -34,5 +35,9 @@ class VideoRepository @Inject constructor(private val videoDataSource: VideoData
 
     override fun getVideoEntries(bucketId: Int): Flowable<List<VideoEntry>> {
         return videoDataSource.getVideoEntries(bucketId)
+    }
+
+    override fun getVideoDetailEntriy(mediaId: Int): Flowable<VideoDetailEntry> {
+        return videoDataSource.getVideoDetailEntriy(mediaId)
     }
 }

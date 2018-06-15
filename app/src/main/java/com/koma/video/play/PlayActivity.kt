@@ -16,11 +16,39 @@
 package com.koma.video.play
 
 import com.koma.video.R
+import com.koma.video.VideoApplication
 import com.koma.video.base.BaseActivity
+import com.koma.video.util.LogUtils
+import javax.inject.Inject
 
 class PlayActivity : BaseActivity() {
-    override fun onPermissonGranted() {
+    @Inject
+    lateinit var presenter: PlayPresenter
+
+    override fun onPermissionGranted() {
+        val mediaId = intent.getLongExtra(KEY_MEDIA_ID, -1)
+        val fragment = supportFragmentManager.findFragmentById(R.id.content_main) as PlayFragment?
+                ?: PlayFragment.newInstance(mediaId).also {
+                    supportFragmentManager.beginTransaction()
+                        .replace(R.id.content_main, it)
+                        .commit()
+                }
+
+        DaggerPlayComponent.builder()
+            .videoRepositoryComponent((application as VideoApplication).videoRepositoryComponent)
+            .playPresenterModule(
+                PlayPresenterModule(
+                    fragment,
+                    mediaId.toInt()
+                )
+            )
+            .build()
+            .inject(this)
     }
 
     override fun getLayoutId(): Int = R.layout.play_activity
+
+    companion object {
+        const val KEY_MEDIA_ID = "key_media_id"
+    }
 }

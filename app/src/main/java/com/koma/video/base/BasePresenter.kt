@@ -15,9 +15,6 @@
  */
 package com.koma.video.base
 
-/**
- * Created by koma on 5/16/18.
- */
 interface BasePresenter {
     fun subscribe()
 

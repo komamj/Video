@@ -21,9 +21,6 @@ import android.os.Build
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 
-/**
- * Created by koma on 5/17/18.
- */
 abstract class BaseActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,11 +28,11 @@ abstract class BaseActivity : AppCompatActivity() {
         setContentView(getLayoutId())
 
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            onPermissonGranted()
+            onPermissionGranted()
         } else if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
             || checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
         ) {
-            onPermissonGranted()
+            onPermissionGranted()
         } else {
             requestPermissions(
                 arrayOf(
@@ -55,7 +52,7 @@ abstract class BaseActivity : AppCompatActivity() {
         when (requestCode) {
             1 -> {
                 if (checkPermissionGrantResults(grantResults)) {
-                    onPermissonGranted()
+                    onPermissionGranted()
                 } else {
                     finish()
                 }
@@ -74,5 +71,5 @@ abstract class BaseActivity : AppCompatActivity() {
 
     protected abstract fun getLayoutId(): Int
 
-    abstract fun onPermissonGranted()
+    abstract fun onPermissionGranted()
 }

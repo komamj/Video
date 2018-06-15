@@ -5,9 +5,11 @@ import android.content.ContentUris
 import android.content.Context
 import android.provider.MediaStore
 import com.koma.video.data.enities.BucketEntry
+import com.koma.video.data.enities.VideoDetailEntry
 import com.koma.video.data.enities.VideoEntry
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
+import java.io.FileNotFoundException
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -34,11 +36,13 @@ class VideoDataSource @Inject constructor(private val context: Context) : IVideo
                     SORT_ORDER
                 )
             cursor?.use {
-                it.moveToFirst()
-                do {
-                    val entry = VideoEntry(it.getLong(0), it.getString(1), it.getInt(2))
-                    entries.add(entry)
-                } while (it.moveToNext())
+                if (cursor.count > 0) {
+                    it.moveToFirst()
+                    do {
+                        val entry = VideoEntry(it.getLong(0), it.getString(1), it.getInt(2))
+                        entries.add(entry)
+                    } while (it.moveToNext())
+                }
             }
             it.onNext(entries)
             it.onComplete()
@@ -59,28 +63,32 @@ class VideoDataSource @Inject constructor(private val context: Context) : IVideo
                 selection, null, null
             )
             cursor?.use {
-                it.moveToFirst()
-                do {
-                    val bucketId = it.getInt(0)
-                    val dateTaken = it.getInt(2)
-                    val entry = BucketEntry(bucketId, it.getString(1))
-                    entry.dateTaken = dateTaken
-                    entries.add(entry)
-                    val cur = resolver.query(
-                        MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
-                        arrayOf(MediaStore.Video.Media._ID),
-                        MediaStore.Video.Media.BUCKET_ID + " = ?",
-                        arrayOf(bucketId.toString()), SORT_ORDER
-                    )
-                    cur?.use {
-                        cur.moveToFirst()
-                        entry.uri = ContentUris.withAppendedId(
+                if (cursor.count > 0) {
+                    it.moveToFirst()
+                    do {
+                        val bucketId = it.getInt(0)
+                        val dateTaken = it.getInt(2)
+                        val entry = BucketEntry(bucketId, it.getString(1))
+                        entry.dateTaken = dateTaken
+                        val cur = resolver.query(
                             MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
-                            cur.getLong(0)
+                            arrayOf(MediaStore.Video.Media._ID),
+                            MediaStore.Video.Media.BUCKET_ID + " = ?",
+                            arrayOf(bucketId.toString()), SORT_ORDER
                         )
-                        entry.count = cur.count
-                    }
-                } while (it.moveToNext())
+                        cur?.use {
+                            if (cur.count > 0) {
+                                cur.moveToFirst()
+                                entry.uri = ContentUris.withAppendedId(
+                                    MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
+                                    cur.getLong(0)
+                                )
+                                entry.count = cur.count
+                                entries.add(entry)
+                            }
+                        }
+                    } while (it.moveToNext())
+                }
             }
             it.onNext(entries)
             it.onComplete()
@@ -105,14 +113,53 @@ class VideoDataSource @Inject constructor(private val context: Context) : IVideo
                     SORT_ORDER
                 )
             cursor?.use {
-                it.moveToFirst()
-                do {
-                    val entry = VideoEntry(it.getLong(0), it.getString(1), it.getInt(2))
-                    entries.add(entry)
-                } while (it.moveToNext())
+                if (cursor.count > 0) {
+                    it.moveToFirst()
+                    do {
+                        val entry = VideoEntry(it.getLong(0), it.getString(1), it.getInt(2))
+                        entries.add(entry)
+                    } while (it.moveToNext())
+                }
             }
             it.onNext(entries)
             it.onComplete()
+        }, BackpressureStrategy.LATEST)
+    }
+
+    override fun getVideoDetailEntriy(mediaId: Int): Flowable<VideoDetailEntry> {
+        return Flowable.create({
+            val projection = arrayOf(
+                MediaStore.Video.Media.DISPLAY_NAME,
+                MediaStore.Video.Media.DURATION,
+                MediaStore.Video.Media.DATE_TAKEN,
+                MediaStore.Video.Media.SIZE,
+                MediaStore.Video.Media.DATA
+            )
+            val selection = MediaStore.Video.Media._ID + " = ?"
+            val cursor =
+                resolver.query(
+                    MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
+                    projection,
+                    selection,
+                    arrayOf(mediaId.toString()),
+                    null
+                )
+            if (cursor == null || cursor.count <= 0) {
+                it.onError(FileNotFoundException("the media id $mediaId is not existed"))
+            } else {
+                val entry = cursor.use {
+                    it.moveToFirst()
+                    VideoDetailEntry(
+                        it.getString(0),
+                        it.getInt(1),
+                        it.getLong(2),
+                        it.getLong(3),
+                        it.getString(4)
+                    )
+                }
+                it.onNext(entry)
+                it.onComplete()
+            }
         }, BackpressureStrategy.LATEST)
     }
 

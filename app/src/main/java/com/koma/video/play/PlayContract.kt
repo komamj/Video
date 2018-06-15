@@ -13,15 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.koma.video.search
+package com.koma.video.play
 
-import com.koma.video.R
-import com.koma.video.base.BaseActivity
+import com.koma.video.base.BasePresenter
+import com.koma.video.base.BaseView
 
-class SearchActivity : BaseActivity() {
-    override fun onPermissionGranted() {
+interface PlayContract {
+    interface View : BaseView<Presenter> {
+        var isActive: Boolean
 
+        fun setLoadingIndicator(active: Boolean)
     }
 
-    override fun getLayoutId(): Int = R.layout.search_activity
+    interface Presenter : BasePresenter {
+    }
 }

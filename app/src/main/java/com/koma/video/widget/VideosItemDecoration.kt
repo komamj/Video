@@ -42,8 +42,8 @@ class VideosItemDecoration(context: Context) : RecyclerView.ItemDecoration() {
                 val params = child.layoutParams as RecyclerView.LayoutParams
                 val top = child.bottom + params.bottomMargin
                 val bottom = top + mDivider.intrinsicHeight
-               setBounds(left, top, right, bottom)
-               draw(c)
+                setBounds(left, top, right, bottom)
+                draw(c)
             }
         }
     }

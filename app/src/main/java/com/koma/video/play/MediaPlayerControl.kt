@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 koma_mj
+ * Copyright 2018 Koma
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,15 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.koma.video.search
+package com.koma.video.play
 
-import com.koma.video.R
-import com.koma.video.base.BaseActivity
+interface MediaPlayerControl {
+    var duration: Int
 
-class SearchActivity : BaseActivity() {
-    override fun onPermissionGranted() {
+    var currentPosition: Int
 
-    }
+    var isPlaying: Boolean
 
-    override fun getLayoutId(): Int = R.layout.search_activity
+    var bufferPercentage: Int
+
+    var audioSessionId: Int
+
+    fun start()
+
+    fun pause()
+
+    fun seekTo(position: Int)
 }

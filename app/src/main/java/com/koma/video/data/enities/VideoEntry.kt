@@ -20,7 +20,11 @@ import android.net.Uri
 import android.provider.MediaStore
 import java.util.*
 
-data class VideoEntry constructor(val id: Long, val displayName: String, val duration: Int) {
+data class VideoEntry constructor(
+    val id: Long,
+    val displayName: String,
+    private val duration: Int
+) {
     var uri: Uri? = null
         get() = ContentUris.withAppendedId(
             MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
@@ -28,16 +32,24 @@ data class VideoEntry constructor(val id: Long, val displayName: String, val dur
         )
 
     var formatDuration: String = "00:00"
-        get() = formatDuration(duration)
+        get() = stringForTime(duration)
 
-    private fun formatDuration(duration: Int): String {
-        val ss = duration / 1000 % 60
-        val mm = duration / 60000 % 60
-        val hh = duration / 3600000
-        return if (duration < 60 * 60 * 1000) {
-            String.format(Locale.getDefault(), "%02d:%02d", mm, ss)
-        } else {
-            String.format(Locale.getDefault(), "%02d:%02d:%02d", hh, mm, ss)
+    companion object {
+        fun stringForTime(time: Int): String {
+            val formatBuilder = StringBuilder()
+            val formatter = Formatter(formatBuilder, Locale.getDefault())
+            val totalSeconds = time / 1000
+
+            val seconds = totalSeconds % 60
+            val minutes = totalSeconds / 60 % 60
+            val hours = totalSeconds / 3600
+
+            formatBuilder.setLength(0)
+            return if (hours > 0) {
+                formatter.format("%d:%02d:%02d", hours, minutes, seconds).toString()
+            } else {
+                formatter.format("%02d:%02d", minutes, seconds).toString()
+            }
         }
     }
 }

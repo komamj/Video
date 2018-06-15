@@ -13,15 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.koma.video.search
+package com.koma.video.play
 
-import com.koma.video.R
-import com.koma.video.base.BaseActivity
+import dagger.Module
+import dagger.Provides
 
-class SearchActivity : BaseActivity() {
-    override fun onPermissionGranted() {
+@Module
+class PlayPresenterModule constructor(val view: PlayContract.View, val mediaId: Int) {
+    @Provides
+    fun providePlayContractView() = view
 
-    }
-
-    override fun getLayoutId(): Int = R.layout.search_activity
+    @Provides
+    fun provideMediaId() = mediaId
 }

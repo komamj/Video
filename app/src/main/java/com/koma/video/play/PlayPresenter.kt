@@ -13,15 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.koma.video.search
+package com.koma.video.play
 
-import com.koma.video.R
-import com.koma.video.base.BaseActivity
+import com.koma.video.data.source.VideoRepository
+import com.koma.video.util.LogUtils
+import javax.inject.Inject
 
-class SearchActivity : BaseActivity() {
-    override fun onPermissionGranted() {
-
+class PlayPresenter @Inject constructor(
+    private val view: PlayContract.View,
+    private val id: Int,
+    private val repository: VideoRepository
+) : PlayContract.Presenter {
+    init {
+        view.presenter = this
     }
 
-    override fun getLayoutId(): Int = R.layout.search_activity
+    override fun subscribe() {
+        LogUtils.i(TAG, "subscribe")
+    }
+
+    override fun unSubscribe() {
+        LogUtils.i(TAG, "unSubscribe")
+    }
+
+    companion object {
+        private const val TAG = "PlayPresenter"
+    }
 }

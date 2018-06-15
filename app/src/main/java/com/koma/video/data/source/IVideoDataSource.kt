@@ -16,6 +16,7 @@
 package com.koma.video.data.source
 
 import com.koma.video.data.enities.BucketEntry
+import com.koma.video.data.enities.VideoDetailEntry
 import com.koma.video.data.enities.VideoEntry
 import io.reactivex.Flowable
 
@@ -25,4 +26,6 @@ interface IVideoDataSource {
     fun getBucketEntries(): Flowable<List<BucketEntry>>
 
     fun getVideoEntries(bucketId: Int): Flowable<List<VideoEntry>>
+
+    fun getVideoDetailEntriy(mediaId: Int): Flowable<VideoDetailEntry>
 }

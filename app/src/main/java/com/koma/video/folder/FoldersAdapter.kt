@@ -48,39 +48,34 @@ class FoldersAdapter(context: Context) :
                 return null
             }
         }) {
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FoldersVH {
-        val viewHolder = FoldersVH(
-            LayoutInflater.from(context).inflate(
-                R.layout.folder_item, parent, false
-            )
-        )
-        viewHolder.itemView.setOnClickListener({
-            val intent = Intent(context, FolderDetailActivity::class.java)
-            val entry = getItem(viewHolder.adapterPosition)
 
-            intent.putExtra(
-                FolderDetailActivity.BUCKET_ID,
-                entry.buketId
-            )
-            intent.putExtra(FolderDetailActivity.BUCKET_NAME, entry.name)
-            context.startActivity(intent)
-        })
-        return viewHolder
-    }
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = FoldersVH(
+        LayoutInflater.from(context).inflate(
+            R.layout.folder_item, parent, false
+        )
+    )
 
     override fun onBindViewHolder(holder: FoldersVH, position: Int) {
         val entry = getItem(position)
+
+        bind(holder, entry)
+    }
+
+    private fun bind(holder: FoldersVH, entry: BucketEntry) {
         GlideApp.with(context)
             .asBitmap()
             .placeholder(ColorDrawable(Color.GRAY))
             .thumbnail(0.1f)
             .load(entry.uri)
             .into(holder.image)
+
         holder.name.text = entry.name
+
         holder.count.text = context.getString(R.string.folder_item_count, entry.count)
     }
 
-    class FoldersVH(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
+    inner class FoldersVH(itemView: View) : RecyclerView.ViewHolder(itemView),
+        View.OnClickListener {
         val image: ImageView
         val name: TextView
         val count: TextView
@@ -93,7 +88,15 @@ class FoldersAdapter(context: Context) :
         }
 
         override fun onClick(view: View) {
+            val intent = Intent(context, FolderDetailActivity::class.java)
+            val entry = getItem(adapterPosition)
 
+            intent.putExtra(
+                FolderDetailActivity.BUCKET_ID,
+                entry.buketId
+            )
+            intent.putExtra(FolderDetailActivity.BUCKET_NAME, entry.name)
+            context.startActivity(intent)
         }
     }
 }

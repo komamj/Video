@@ -3,6 +3,9 @@
     <string name="video_page_title">所有视频</string>
     <string name="folder_page_title">文件夹</string>
 
+    <string name="action_detail">查看详情</string>
+    <string name="action_delete">删除</string>
+
     <string name="folder_item_count">%d个视频</string>
     <string name="title_item_detail">Item Detail</string>
 </resources>
