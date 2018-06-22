@@ -57,6 +57,11 @@ class VideosPresenter @Inject constructor(
                 }
             }, onError = {
                 LogUtils.e(TAG, "loadVideoEntries error : " + it.message)
+
+                if (view.isActive) {
+                    view.setLoadingIndicator(false)
+                }
+
             }, onComplete = {
                 if (view.isActive) {
                     view.setLoadingIndicator(false)

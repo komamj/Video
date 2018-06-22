@@ -269,7 +269,6 @@ class VideoView constructor(context: Context, attrs: AttributeSet? = null) :
                 setScreenOnWhilePlaying(true)
                 prepareAsync()
             }
-
             // we don't set the target state here either, but preserve the
             // target state that was there before.
             currentState = STATE_PREPARING

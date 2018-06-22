@@ -33,6 +33,7 @@ class PlayFragment : BaseFragment(), PlayContract.View {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        media_controller.setMediaPlayer(video_view)
         video_view.setMediaController(media_controller)
 
         arguments?.run {

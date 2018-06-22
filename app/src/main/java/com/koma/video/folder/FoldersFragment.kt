@@ -97,6 +97,10 @@ class FoldersFragment : BaseFragment(), FoldersContract.View {
         }
     }
 
+    override fun setEmptyIndictor(active: Boolean) {
+
+    }
+
     override fun getLayoutId(): Int = R.layout.base_fragment
 
     companion object {

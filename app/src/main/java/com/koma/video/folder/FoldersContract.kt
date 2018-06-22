@@ -26,6 +26,8 @@ interface FoldersContract {
         fun setLoadingIndicator(active: Boolean)
 
         fun showBucketEntries(entries: List<BucketEntry>)
+
+        fun setEmptyIndictor(active: Boolean)
     }
 
     interface Presenter : BasePresenter {
