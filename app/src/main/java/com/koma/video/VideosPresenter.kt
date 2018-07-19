@@ -54,6 +54,8 @@ class VideosPresenter @Inject constructor(
             .subscribeBy(onNext = {
                 if (view.isActive) {
                     view.showVideoEntries(it)
+
+                    view.setEmptyIndicator(it.isEmpty())
                 }
             }, onError = {
                 LogUtils.e(TAG, "loadVideoEntries error : " + it.message)

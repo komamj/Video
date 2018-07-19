@@ -23,8 +23,9 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class VideoRepository @Inject constructor(private val videoDataSource: VideoDataSource) :
-    IVideoDataSource {
+class VideoRepository @Inject constructor(
+    private val videoDataSource: VideoDataSource
+) : IVideoDataSource {
     override fun getVideoEntries(): Flowable<List<VideoEntry>> {
         return videoDataSource.getVideoEntries()
     }
@@ -37,7 +38,15 @@ class VideoRepository @Inject constructor(private val videoDataSource: VideoData
         return videoDataSource.getVideoEntries(bucketId)
     }
 
-    override fun getVideoDetailEntriy(mediaId: Int): Flowable<VideoDetailEntry> {
-        return videoDataSource.getVideoDetailEntriy(mediaId)
+    override fun getVideoDetailEntry(mediaId: Int): Flowable<VideoDetailEntry> {
+        return videoDataSource.getVideoDetailEntry(mediaId)
+    }
+
+    override fun getTitle(mediaId: Long): Flowable<String> {
+        return videoDataSource.getTitle(mediaId)
+    }
+
+    override fun getVideoEntries(keyword: String): Flowable<List<VideoEntry>> {
+        return videoDataSource.getVideoEntries(keyword)
     }
 }

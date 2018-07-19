@@ -31,7 +31,6 @@ import com.koma.video.base.BaseAdapter
 import com.koma.video.data.enities.VideoEntry
 import com.koma.video.play.PlayActivity
 import com.koma.video.util.GlideApp
-import com.koma.video.util.LogUtils
 
 class VideosAdapter(context: Context) : BaseAdapter<VideoEntry, VideosAdapter.VideosVH>(
     context = context,
@@ -41,7 +40,7 @@ class VideosAdapter(context: Context) : BaseAdapter<VideoEntry, VideosAdapter.Vi
         }
 
         override fun areContentsTheSame(oldItem: VideoEntry, newItem: VideoEntry): Boolean {
-            return oldItem.equals(newItem)
+            return oldItem == newItem
         }
     }
 ) {
@@ -92,7 +91,6 @@ class VideosAdapter(context: Context) : BaseAdapter<VideoEntry, VideosAdapter.Vi
                 else -> {
                     val intent = Intent(context, PlayActivity::class.java)
                     intent.putExtra(PlayActivity.KEY_MEDIA_ID, getItem(adapterPosition).id)
-                    LogUtils.i("",""+getItem(adapterPosition).id)
                     context.startActivity(intent)
                 }
             }

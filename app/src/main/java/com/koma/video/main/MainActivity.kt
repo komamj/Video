@@ -16,14 +16,17 @@
 package com.koma.video.main
 
 import android.content.Context
+import android.content.Intent
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
 import android.view.Menu
+import android.view.MenuItem
 import com.koma.video.R
 import com.koma.video.VideosFragment
 import com.koma.video.base.BaseActivity
 import com.koma.video.folder.FoldersFragment
+import com.koma.video.search.SearchActivity
 import kotlinx.android.synthetic.main.main_activity.*
 
 class MainActivity : BaseActivity() {
@@ -43,9 +46,19 @@ class MainActivity : BaseActivity() {
         return super.onCreateOptionsMenu(menu)
     }
 
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        when (item?.itemId) {
+            R.id.action_search -> {
+                startActivity(Intent(this, SearchActivity::class.java))
+                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
     private class MainAdapter(
         private val context: Context,
-        private val fragmentManager: FragmentManager
+        fragmentManager: FragmentManager
     ) : FragmentPagerAdapter(fragmentManager) {
         override fun getItem(position: Int): Fragment {
             return when (position) {

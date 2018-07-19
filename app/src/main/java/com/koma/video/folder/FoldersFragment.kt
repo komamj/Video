@@ -32,9 +32,7 @@ class FoldersFragment : BaseFragment(), FoldersContract.View {
     @Inject
     lateinit var foldersPresenter: FoldersPresenter
 
-    override var presenter: FoldersContract.Presenter
-        get() = foldersPresenter
-        set(value) {}
+    override lateinit var presenter: FoldersContract.Presenter
 
     override var isActive: Boolean = false
         get() = isAdded
@@ -97,7 +95,7 @@ class FoldersFragment : BaseFragment(), FoldersContract.View {
         }
     }
 
-    override fun setEmptyIndictor(active: Boolean) {
+    override fun setEmptyIndicator(active: Boolean) {
 
     }
 

@@ -27,7 +27,7 @@ interface FoldersContract {
 
         fun showBucketEntries(entries: List<BucketEntry>)
 
-        fun setEmptyIndictor(active: Boolean)
+        fun setEmptyIndicator(active: Boolean)
     }
 
     interface Presenter : BasePresenter {

@@ -38,7 +38,7 @@ class FolderDetailPresenter @Inject constructor(
     }
 
     override fun subscribe() {
-        LogUtils.d(TAG, "sunbscribe")
+        LogUtils.d(TAG, "subscribe")
 
         loadVideoEntries(bucketId)
     }
@@ -59,14 +59,20 @@ class FolderDetailPresenter @Inject constructor(
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeBy(
                 onNext = {
-                    if (view.isActive) {
-                        view.showVideoEntries(it)
+                    with(view) {
+                        if (isActive) {
+                            showVideoEntries(it)
+
+                            setEmptyIndicator(it.isEmpty())
+                        }
                     }
                 }, onError = {
                     LogUtils.e(TAG, "loadVideoEntries error : " + it.message)
                 }, onComplete = {
-                    if (view.isActive) {
-                        view.setLoadingIndicator(false)
+                    with(view) {
+                        if (isActive) {
+                            setLoadingIndicator(false)
+                        }
                     }
                 }
             )

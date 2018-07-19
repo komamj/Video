@@ -40,7 +40,7 @@ class FoldersAdapter(context: Context) :
             }
 
             override fun areContentsTheSame(oldItem: BucketEntry, newItem: BucketEntry): Boolean {
-                return oldItem.equals(newItem)
+                return oldItem == newItem
             }
 
             override
@@ -70,7 +70,6 @@ class FoldersAdapter(context: Context) :
             .into(holder.image)
 
         holder.name.text = entry.name
-
         holder.count.text = context.getString(R.string.folder_item_count, entry.count)
     }
 

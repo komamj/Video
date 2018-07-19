@@ -21,8 +21,8 @@ import dagger.Component
 
 @ActivityScoped
 @Component(
-    dependencies = arrayOf(VideoRepositoryComponent::class),
-    modules = arrayOf(FolderDetailPresenterModule::class)
+    dependencies = [(VideoRepositoryComponent::class)],
+    modules = [(FolderDetailPresenterModule::class)]
 )
 interface FolderDetailComponent {
     fun inject(activity: FolderDetailActivity)

@@ -31,6 +31,10 @@ class FoldersPresenter @Inject constructor(
         CompositeDisposable()
     }
 
+    init {
+        view.presenter = this
+    }
+
     override fun subscribe() {
         LogUtils.d(TAG, "subscribe")
 
@@ -54,6 +58,8 @@ class FoldersPresenter @Inject constructor(
             .subscribeBy(onNext = {
                 if (view.isActive) {
                     view.showBucketEntries(it)
+
+                    view.setEmptyIndicator(it.isEmpty())
                 }
             }, onError = {
                 LogUtils.e(TAG, "loadBucketEntries error : " + it.message)

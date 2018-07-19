@@ -21,8 +21,8 @@ import dagger.Component
 
 @FragmentScoped
 @Component(
-    dependencies = arrayOf(VideoRepositoryComponent::class),
-    modules = arrayOf(VideosPresenterModule::class)
+    dependencies = [(VideoRepositoryComponent::class)],
+    modules = [(VideosPresenterModule::class)]
 )
 interface VideosComponent {
     fun inject(fragment: VideosFragment)

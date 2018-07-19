@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 koma_mj
+ * Copyright 2018 Koma
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,13 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.koma.video.base
+package com.koma.video.play
 
-import android.content.Context
-import android.support.v7.recyclerview.extensions.ListAdapter
-import android.support.v7.util.DiffUtil
-import android.support.v7.widget.RecyclerView
+interface GestureListener {
+    fun onSingleTapConfirmed(): Boolean
 
-abstract class BaseAdapter<T, VH : RecyclerView.ViewHolder> constructor(
-    protected val context: Context, private val diffCallback: DiffUtil.ItemCallback<T>
-) : ListAdapter<T, VH>(diffCallback)
+    fun onDoubleTap(): Boolean
+
+    fun onBrightnessChanged(percent: Int)
+
+    fun onVolumeChanged(percent: Int)
+
+    fun onProgressChanged()
+}

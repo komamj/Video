@@ -31,9 +31,7 @@ class FolderDetailActivity : BaseActivity() {
     override fun onPermissionGranted() {
         toolbar.title = intent.getStringExtra(BUCKET_NAME)
         setSupportActionBar(toolbar)
-        supportActionBar?.run {
-            this.setDisplayHomeAsUpEnabled(true)
-        }
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         val fragment =
             supportFragmentManager.findFragmentById(R.id.content_main) as FolderDetailFragment?

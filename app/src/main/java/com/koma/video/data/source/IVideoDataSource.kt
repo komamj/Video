@@ -27,5 +27,9 @@ interface IVideoDataSource {
 
     fun getVideoEntries(bucketId: Int): Flowable<List<VideoEntry>>
 
-    fun getVideoDetailEntriy(mediaId: Int): Flowable<VideoDetailEntry>
+    fun getVideoDetailEntry(mediaId: Int): Flowable<VideoDetailEntry>
+
+    fun getTitle(mediaId: Long): Flowable<String>
+
+    fun getVideoEntries(keyword: String): Flowable<List<VideoEntry>>
 }

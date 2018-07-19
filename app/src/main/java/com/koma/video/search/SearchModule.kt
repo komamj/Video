@@ -16,7 +16,10 @@
 package com.koma.video.search
 
 import dagger.Module
+import dagger.Provides
 
 @Module
-class SearchModule {
+class SearchModule constructor(private val view: SearchContract.View) {
+    @Provides
+    fun provideSearchContractView() = view
 }

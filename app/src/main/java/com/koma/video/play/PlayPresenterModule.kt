@@ -19,10 +19,7 @@ import dagger.Module
 import dagger.Provides
 
 @Module
-class PlayPresenterModule constructor(val view: PlayContract.View, val mediaId: Int) {
+class PlayPresenterModule constructor(private val view: PlayContract.View) {
     @Provides
     fun providePlayContractView() = view
-
-    @Provides
-    fun provideMediaId() = mediaId
 }

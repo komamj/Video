@@ -20,6 +20,7 @@ import android.media.AudioAttributes
 import android.media.AudioManager
 import android.media.MediaPlayer
 import android.net.Uri
+import android.os.PowerManager
 import android.util.AttributeSet
 import android.view.SurfaceHolder
 import android.view.SurfaceView
@@ -82,6 +83,8 @@ class VideoView constructor(context: Context, attrs: AttributeSet? = null) :
 
         override fun surfaceCreated(holder: SurfaceHolder) {
             LogUtils.i(TAG, "surfaceCreated")
+
+            mediaController?.setLoadingIndicator(true)
 
             surfaceHolder = holder
 
@@ -266,7 +269,8 @@ class VideoView constructor(context: Context, attrs: AttributeSet? = null) :
                 setDataSource(context, uri)
                 setDisplay(surfaceHolder)
                 setAudioAttributes(audioAttributes)
-                setScreenOnWhilePlaying(true)
+                setWakeMode(context, PowerManager.SCREEN_BRIGHT_WAKE_LOCK)
+               // setScreenOnWhilePlaying(true)
                 prepareAsync()
             }
             // we don't set the target state here either, but preserve the
@@ -296,7 +300,7 @@ class VideoView constructor(context: Context, attrs: AttributeSet? = null) :
     }
 
     private val sizeChangedListener: MediaPlayer.OnVideoSizeChangedListener =
-        MediaPlayer.OnVideoSizeChangedListener { mp, width, height ->
+        MediaPlayer.OnVideoSizeChangedListener { mp, _, _ ->
             videoWidth = mp.videoWidth
             videoHeight = mp.videoHeight
             if (videoWidth != 0 && videoHeight != 0) {
@@ -311,7 +315,11 @@ class VideoView constructor(context: Context, attrs: AttributeSet? = null) :
 
             onPreparedListener?.onPrepared(mediaPlayer)
 
-            mediaController?.isEnabled = true
+            mediaController?.run {
+                isEnabled = true
+
+                setLoadingIndicator(false)
+            }
             videoWidth = mp.videoWidth
             videoHeight = mp.videoHeight
 
@@ -427,13 +435,13 @@ class VideoView constructor(context: Context, attrs: AttributeSet? = null) :
     /*
      * release the media player in any state
      */
-    private fun release(cleartargetstate: Boolean) {
+    private fun release(clearTargetState: Boolean) {
         mediaPlayer?.run {
             reset()
             release()
             mediaPlayer = null
             currentState = STATE_IDLE
-            if (cleartargetstate) {
+            if (clearTargetState) {
                 targetState = STATE_IDLE
             }
             if (audioFocusType != AudioManager.AUDIOFOCUS_NONE) {
@@ -511,7 +519,7 @@ class VideoView constructor(context: Context, attrs: AttributeSet? = null) :
     }
 
     companion object {
-        private val TAG = "VideoView"
+        private const val TAG = "VideoView"
 
         // all possible internal states
         private const val STATE_ERROR = -1

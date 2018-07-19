@@ -126,7 +126,7 @@ class VideoDataSource @Inject constructor(private val context: Context) : IVideo
         }, BackpressureStrategy.LATEST)
     }
 
-    override fun getVideoDetailEntriy(mediaId: Int): Flowable<VideoDetailEntry> {
+    override fun getVideoDetailEntry(mediaId: Int): Flowable<VideoDetailEntry> {
         return Flowable.create({
             val projection = arrayOf(
                 MediaStore.Video.Media.DISPLAY_NAME,
@@ -160,6 +160,37 @@ class VideoDataSource @Inject constructor(private val context: Context) : IVideo
                 it.onNext(entry)
                 it.onComplete()
             }
+        }, BackpressureStrategy.LATEST)
+    }
+
+    override fun getTitle(mediaId: Long): Flowable<String> {
+        return Flowable.create(
+            {
+                var title = ""
+                val cursor =
+                    resolver.query(
+                        MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
+                        arrayOf(MediaStore.Video.Media._ID, MediaStore.Video.Media.TITLE),
+                        MediaStore.Video.Media._ID + " = ?",
+                        arrayOf(mediaId.toString()),
+                        null
+                    )
+                cursor?.use {
+                    it.moveToFirst()
+
+                    title = it.getString(1)
+                }
+                it.onNext(title)
+                it.onComplete()
+            }, BackpressureStrategy.LATEST
+        )
+    }
+
+    override fun getVideoEntries(keyword: String): Flowable<List<VideoEntry>> {
+        return Flowable.create({
+            val videoEntries = ArrayList<VideoEntry>()
+            it.onNext(videoEntries)
+            it.onComplete()
         }, BackpressureStrategy.LATEST)
     }
 

@@ -16,38 +16,27 @@
 package com.koma.video.play
 
 import android.content.Context
-import android.support.v4.content.ContextCompat
-import android.support.v7.widget.CardView
+import android.support.constraint.ConstraintLayout
 import android.util.AttributeSet
 import android.view.View
-import android.widget.ImageView
 import android.widget.SeekBar
-import android.widget.TextView
 import com.koma.video.R
 import com.koma.video.data.enities.VideoEntry
-
+import kotlinx.android.synthetic.main.media_controller.view.*
 
 class MediaController @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null
-) : CardView(context, attrs), View.OnClickListener {
-    private lateinit var pause: ImageView
-    private lateinit var rotation: ImageView
-    private lateinit var currentTime: TextView
-    private lateinit var duration: TextView
-    private lateinit var progress: SeekBar
-
+) : ConstraintLayout(context, attrs), View.OnClickListener {
     private var isDragging = false
     private var isShowing = false
 
-    init {
-        setCardBackgroundColor(ContextCompat.getColor(context, R.color.media_controller_background))
-        radius = 8f
-        cardElevation = 0f
-        useCompatPadding = true
-    }
-
     private lateinit var player: MediaPlayerControl
+
+    init {
+        fitsSystemWindows = true
+        visibility = View.GONE
+    }
 
     fun setMediaPlayer(playerControl: MediaPlayerControl) {
         this.player = playerControl
@@ -64,15 +53,8 @@ class MediaController @JvmOverloads constructor(
     }
 
     private fun initView() {
-        pause = findViewById(R.id.iv_pause)
-        pause.setOnClickListener(this)
-
-        currentTime = findViewById(R.id.tv_current)
-
-        duration = findViewById(R.id.tv_duration)
-
-        progress = findViewById(R.id.seek_bar)
-        progress.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+        iv_pause.setOnClickListener(this)
+        seek_bar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromuser: Boolean) {
                 if (!fromuser) {
                     // We're not interested in programmatically generated changes to
@@ -81,9 +63,9 @@ class MediaController @JvmOverloads constructor(
                 }
 
                 val duration = player.duration
-                val newposition = duration * progress / 1000L
-                player.seekTo(newposition.toInt())
-                currentTime.text = VideoEntry.stringForTime(newposition.toInt())
+                val newPosition = duration * progress / 1000L
+                player.seekTo(newPosition.toInt())
+                tv_current.text = VideoEntry.stringForTime(newPosition.toInt())
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar) {
@@ -104,7 +86,7 @@ class MediaController @JvmOverloads constructor(
 
                 updatePausePlay()
 
-                show(DEAULT_TIME_OUT)
+                show(DEFAULT_TIME_OUT)
 
                 // Ensure that progress is properly updated in the future,
                 // the call to show() does not guarantee this because it is a
@@ -112,24 +94,25 @@ class MediaController @JvmOverloads constructor(
                 post(showProgress)
             }
         })
-
-        rotation = findViewById(R.id.iv_fullscreen)
-        rotation.setOnClickListener(this)
     }
 
     override fun setEnabled(enabled: Boolean) {
-        pause.isEnabled = enabled
-        progress.isEnabled = enabled
+        iv_pause.isEnabled = enabled
+        seek_bar.isEnabled = enabled
         super.setEnabled(enabled)
     }
 
     fun show() {
-        show(DEAULT_TIME_OUT)
+        show(DEFAULT_TIME_OUT)
     }
 
     fun show(timeout: Int) {
         if (!isShowing) {
             setProgress()
+
+            (context as PlayActivity).showSystemUi(true)
+
+            visibility = View.VISIBLE
 
             isShowing = true
         }
@@ -138,10 +121,10 @@ class MediaController @JvmOverloads constructor(
         // cause the progress bar to be updated even if mShowing
         // was already true.  This happens, for example, if we're
         // paused with the progress bar isShowing the user hits play.
-        post(showProgress);
+        post(showProgress)
 
         if (timeout != 0) {
-            removeCallbacks(fadeOut);
+            removeCallbacks(fadeOut)
             postDelayed(fadeOut, timeout.toLong())
         }
     }
@@ -155,12 +138,12 @@ class MediaController @JvmOverloads constructor(
         if (duration > 0) {
             // use long to avoid overflow
             val pos = 1000L * position / duration
-            progress.progress = pos.toInt()
+            seek_bar.progress = pos.toInt()
         }
         val percent = player.bufferPercentage
-        progress.secondaryProgress = percent * 10
-        this.duration.text = VideoEntry.stringForTime(duration)
-        currentTime.text = VideoEntry.stringForTime(position)
+        seek_bar.secondaryProgress = percent * 10
+        tv_duration.text = VideoEntry.stringForTime(duration)
+        tv_current.text = VideoEntry.stringForTime(position)
 
         return position
     }
@@ -174,6 +157,10 @@ class MediaController @JvmOverloads constructor(
      */
     fun hide() {
         if (isShowing) {
+            (context as PlayActivity).showSystemUi(false)
+
+            visibility = View.GONE
+
             removeCallbacks(showProgress)
 
             isShowing = false
@@ -196,23 +183,20 @@ class MediaController @JvmOverloads constructor(
             R.id.iv_pause -> {
                 doPauseResume()
 
-                show(DEAULT_TIME_OUT)
-            }
-            R.id.iv_fullscreen -> {
-
+                show(DEFAULT_TIME_OUT)
             }
         }
     }
 
     private fun updatePausePlay() {
         if (player.isPlaying) {
-            pause.setImageResource(R.drawable.ic_pause)
+            iv_pause.setImageResource(R.drawable.ic_pause)
         } else {
-            pause.setImageResource(R.drawable.ic_play)
+            iv_pause.setImageResource(R.drawable.ic_play)
         }
     }
 
-    private fun doPauseResume() {
+    fun doPauseResume() {
         with(player) {
             if (isPlaying) {
                 pause()
@@ -223,9 +207,17 @@ class MediaController @JvmOverloads constructor(
         updatePausePlay()
     }
 
+    fun setLoadingIndicator(active: Boolean) {
+        if (active) {
+            progress_bar.show()
+        } else {
+            progress_bar.hide()
+        }
+    }
+
     companion object {
         private const val TAG = "MediaController"
 
-        private const val DEAULT_TIME_OUT = 3000
+        private const val DEFAULT_TIME_OUT = 3000
     }
 }

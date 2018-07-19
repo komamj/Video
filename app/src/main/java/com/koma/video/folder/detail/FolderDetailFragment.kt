@@ -79,6 +79,10 @@ class FolderDetailFragment : BaseFragment(), FolderDetailContract.View {
         }
     }
 
+    override fun setEmptyIndicator(active: Boolean) {
+
+    }
+
     override fun showVideoEntries(entries: List<VideoEntry>) {
         videosAdapter.submitList(entries)
     }

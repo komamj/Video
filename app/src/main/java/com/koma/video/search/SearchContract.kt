@@ -29,6 +29,6 @@ interface SearchContract {
     }
 
     interface Presenter : BasePresenter {
-        fun loadVideoEntries(ketword: String)
+        fun loadVideoEntries(keyword: String)
     }
 }

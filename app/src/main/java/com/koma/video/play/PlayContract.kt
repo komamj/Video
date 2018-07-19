@@ -20,11 +20,12 @@ import com.koma.video.base.BaseView
 
 interface PlayContract {
     interface View : BaseView<Presenter> {
-        var isActive: Boolean
-
         fun setLoadingIndicator(active: Boolean)
+
+        fun showTitle(title: String)
     }
 
     interface Presenter : BasePresenter {
+        fun loadTitle(mediaId: Long)
     }
 }

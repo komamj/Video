@@ -13,13 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.koma.video.base
+package com.koma.video.search
 
-import android.content.Context
-import android.support.v7.recyclerview.extensions.ListAdapter
-import android.support.v7.util.DiffUtil
-import android.support.v7.widget.RecyclerView
-
-abstract class BaseAdapter<T, VH : RecyclerView.ViewHolder> constructor(
-    protected val context: Context, private val diffCallback: DiffUtil.ItemCallback<T>
-) : ListAdapter<T, VH>(diffCallback)
+class SearchAdapter {
+}

@@ -21,8 +21,8 @@ import dagger.Component
 
 @ActivityScoped
 @Component(
-    dependencies = arrayOf(VideoRepositoryComponent::class),
-    modules = arrayOf(PlayPresenterModule::class)
+    dependencies = [(VideoRepositoryComponent::class)],
+    modules = [(PlayPresenterModule::class)]
 )
 interface PlayComponent {
     fun inject(activity: PlayActivity)

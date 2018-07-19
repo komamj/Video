@@ -17,13 +17,18 @@ package com.koma.video.play
 
 import com.koma.video.data.source.VideoRepository
 import com.koma.video.util.LogUtils
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.subscribeBy
+import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
 class PlayPresenter @Inject constructor(
     private val view: PlayContract.View,
-    private val id: Int,
     private val repository: VideoRepository
 ) : PlayContract.Presenter {
+    private val disposables: CompositeDisposable = CompositeDisposable()
+
     init {
         view.presenter = this
     }
@@ -34,6 +39,23 @@ class PlayPresenter @Inject constructor(
 
     override fun unSubscribe() {
         LogUtils.i(TAG, "unSubscribe")
+
+        disposables.clear()
+    }
+
+    override fun loadTitle(mediaId: Long) {
+        val disposable = repository.getTitle(mediaId)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeBy(
+                onNext = {
+                    view.showTitle(it)
+                },
+                onError = {
+                    LogUtils.e(TAG, "loadTitle error ${it.message}")
+                }
+            )
+        disposables.add(disposable)
     }
 
     companion object {

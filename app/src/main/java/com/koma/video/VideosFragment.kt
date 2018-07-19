@@ -91,7 +91,7 @@ class VideosFragment : BaseFragment(), VideosContract.View {
         }
     }
 
-    override fun setEmptyIndictor(active: Boolean) {
+    override fun setEmptyIndicator(active: Boolean) {
 
     }
 
