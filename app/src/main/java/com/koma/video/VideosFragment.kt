@@ -22,6 +22,7 @@ import android.support.v7.widget.LinearLayoutManager
 import com.koma.video.base.BaseFragment
 import com.koma.video.data.enities.VideoEntry
 import com.koma.video.util.LogUtils
+import com.koma.video.widget.ItemAnimatorFactory
 import com.koma.video.widget.VideosItemDecoration
 import kotlinx.android.synthetic.main.base_fragment.*
 import javax.inject.Inject
@@ -68,6 +69,7 @@ class VideosFragment : BaseFragment(), VideosContract.View {
             layoutManager = LinearLayoutManager(context).also {
                 it.orientation = LinearLayoutManager.VERTICAL
             }
+            itemAnimator = ItemAnimatorFactory.slidein()
             addItemDecoration(VideosItemDecoration(context))
             setHasFixedSize(true)
             videosAdapter = VideosAdapter(context)

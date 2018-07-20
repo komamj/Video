@@ -24,6 +24,7 @@ import com.koma.video.VideoApplication
 import com.koma.video.base.BaseFragment
 import com.koma.video.data.enities.BucketEntry
 import com.koma.video.util.LogUtils
+import com.koma.video.widget.ItemAnimatorFactory
 import com.koma.video.widget.VideosItemDecoration
 import kotlinx.android.synthetic.main.base_fragment.*
 import javax.inject.Inject
@@ -66,6 +67,7 @@ class FoldersFragment : BaseFragment(), FoldersContract.View {
             layoutManager = LinearLayoutManager(context).also {
                 it.orientation = LinearLayoutManager.VERTICAL
             }
+            itemAnimator = ItemAnimatorFactory.slidein()
             addItemDecoration(VideosItemDecoration(context))
             setHasFixedSize(true)
             foldersAdapter = FoldersAdapter(context)

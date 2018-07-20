@@ -22,6 +22,7 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class VideosPresenter @Inject constructor(
@@ -49,6 +50,7 @@ class VideosPresenter @Inject constructor(
             view.setLoadingIndicator(true)
         }
         val disposable: Disposable = repository.getVideoEntries()
+            .delay(1000, TimeUnit.MILLISECONDS)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeBy(onNext = {
