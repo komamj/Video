@@ -7,7 +7,8 @@
     <string name="action_delete">删除</string>
 
     <string name="folder_item_count">%d个视频</string>
-    <string name="title_item_detail">Item Detail</string>
+
+    <string name="no_video">没有视频</string>
 
     <string name="percent_gesture_indicator">%d%%</string>
 

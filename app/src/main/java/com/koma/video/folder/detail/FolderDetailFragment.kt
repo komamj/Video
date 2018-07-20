@@ -46,9 +46,9 @@ class FolderDetailFragment : BaseFragment(), FolderDetailContract.View {
                 ContextCompat.getColor(context, R.color.colorAccent),
                 ContextCompat.getColor(context, R.color.colorPrimaryDark)
             )
-            setOnRefreshListener({
+            setOnRefreshListener {
                 presenter.subscribe()
-            })
+            }
         }
 
         with(recycler_view) {
@@ -82,7 +82,7 @@ class FolderDetailFragment : BaseFragment(), FolderDetailContract.View {
     }
 
     override fun setEmptyIndicator(active: Boolean) {
-
+        super.showEmpty(active)
     }
 
     override fun showVideoEntries(entries: List<VideoEntry>) {

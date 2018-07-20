@@ -19,6 +19,8 @@ import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
+import android.view.View
+import android.widget.TextView
 import com.koma.video.base.BaseFragment
 import com.koma.video.data.enities.VideoEntry
 import com.koma.video.util.LogUtils
@@ -31,9 +33,7 @@ class VideosFragment : BaseFragment(), VideosContract.View {
     @Inject
     lateinit var videosPresenter: VideosPresenter
 
-    override var presenter: VideosContract.Presenter
-        get() = videosPresenter
-        set(value) {}
+    override lateinit var presenter: VideosContract.Presenter
 
     override var isActive: Boolean = false
         get() = isAdded
@@ -46,23 +46,25 @@ class VideosFragment : BaseFragment(), VideosContract.View {
         LogUtils.d(TAG, "onActivityCreated")
 
         DaggerVideosComponent.builder()
-            .videoRepositoryComponent(
-                ((context as AppCompatActivity).application as VideoApplication)
-                    .videoRepositoryComponent
-            )
-            .videosPresenterModule(VideosPresenterModule(this))
-            .build()
-            .inject(this)
+                .videoRepositoryComponent(
+                        ((context as AppCompatActivity).application as VideoApplication)
+                                .videoRepositoryComponent
+                )
+                .videosPresenterModule(VideosPresenterModule(this))
+                .build()
+                .inject(this)
+
+        presenter = videosPresenter
 
         with(refresh_layout) {
             setColorSchemeColors(
-                ContextCompat.getColor(context, R.color.colorPrimary),
-                ContextCompat.getColor(context, R.color.colorAccent),
-                ContextCompat.getColor(context, R.color.colorPrimaryDark)
+                    ContextCompat.getColor(context, R.color.colorPrimary),
+                    ContextCompat.getColor(context, R.color.colorAccent),
+                    ContextCompat.getColor(context, R.color.colorPrimaryDark)
             )
-            setOnRefreshListener({
+            setOnRefreshListener {
                 presenter.loadVideoEntries()
-            })
+            }
         }
 
         with(recycler_view) {
@@ -94,7 +96,7 @@ class VideosFragment : BaseFragment(), VideosContract.View {
     }
 
     override fun setEmptyIndicator(active: Boolean) {
-
+        super.showEmpty(active)
     }
 
     override fun showVideoEntries(videoEntries: List<VideoEntry>) {

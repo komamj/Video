@@ -1,5 +1,4 @@
 # Video
-=======
 
 This repository shows how to display and play local video on Android.
 

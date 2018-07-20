@@ -20,14 +20,18 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
+import kotlinx.android.synthetic.main.base_fragment.*
 
 abstract class BaseFragment : Fragment() {
+    protected var emptyView: TextView? = null
+
     protected var viewCreated: Boolean = false
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+            inflater: LayoutInflater,
+            container: ViewGroup?,
+            savedInstanceState: Bundle?
     ): View {
         val view = inflater.inflate(getLayoutId(), container, false)
         viewCreated = true
@@ -35,4 +39,18 @@ abstract class BaseFragment : Fragment() {
     }
 
     abstract fun getLayoutId(): Int
+
+    protected fun showEmpty(forceShow: Boolean) {
+        if (emptyView == null) {
+            if (forceShow) {
+                emptyView = view_stub.inflate() as TextView
+            }
+        } else {
+            if (forceShow) {
+                emptyView?.visibility = View.VISIBLE
+            } else {
+                emptyView?.visibility = View.GONE
+            }
+        }
+    }
 }

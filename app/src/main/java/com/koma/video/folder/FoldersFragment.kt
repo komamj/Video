@@ -44,23 +44,23 @@ class FoldersFragment : BaseFragment(), FoldersContract.View {
         super.onActivityCreated(savedInstanceState)
 
         DaggerFoldersComponent.builder()
-            .videoRepositoryComponent(
-                ((context as AppCompatActivity).application as VideoApplication)
-                    .videoRepositoryComponent
-            )
-            .foldersPresenterModule(FoldersPresenterModule(this))
-            .build()
-            .inject(this)
+                .videoRepositoryComponent(
+                        ((context as AppCompatActivity).application as VideoApplication)
+                                .videoRepositoryComponent
+                )
+                .foldersPresenterModule(FoldersPresenterModule(this))
+                .build()
+                .inject(this)
 
         with(refresh_layout) {
             setColorSchemeColors(
-                ContextCompat.getColor(context, R.color.colorPrimary),
-                ContextCompat.getColor(context, R.color.colorAccent),
-                ContextCompat.getColor(context, R.color.colorPrimaryDark)
+                    ContextCompat.getColor(context, R.color.colorPrimary),
+                    ContextCompat.getColor(context, R.color.colorAccent),
+                    ContextCompat.getColor(context, R.color.colorPrimaryDark)
             )
-            setOnRefreshListener({
+            this.setOnRefreshListener {
                 presenter.loadBucketEntries()
-            })
+            }
         }
 
         with(recycler_view) {
@@ -98,7 +98,7 @@ class FoldersFragment : BaseFragment(), FoldersContract.View {
     }
 
     override fun setEmptyIndicator(active: Boolean) {
-
+        super.showEmpty(active)
     }
 
     override fun getLayoutId(): Int = R.layout.base_fragment
