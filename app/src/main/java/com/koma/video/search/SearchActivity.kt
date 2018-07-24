@@ -24,27 +24,31 @@ import kotlinx.android.synthetic.main.search_activity.*
 import javax.inject.Inject
 
 class SearchActivity : BaseActivity() {
+    private var listener: OnSearchTextListener? = null
+
     @Inject
     lateinit var presenter: SearchPresenter
+
+    fun setListener(listener: OnSearchTextListener) {
+        this.listener = listener
+    }
 
     override fun onPermissionGranted() {
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
+        search_view.onActionViewExpanded()
         search_view.setOnQueryTextListener(
             object : SearchView.OnQueryTextListener {
-                override fun onQueryTextSubmit(query: String?): Boolean {
-                    query?.run {
-                        if (!isEmpty()) {
-                            trim()
+                override fun onQueryTextSubmit(query: String): Boolean {
+                    search_view.clearFocus()
 
-                            presenter.loadVideoEntries(this)
-                        }
-                    }
-                    return true
+                    listener?.run {
+                        return onQueryTextSubmit(query)
+                    } ?: return true
                 }
 
-                override fun onQueryTextChange(newText: String?): Boolean {
+                override fun onQueryTextChange(newText: String): Boolean {
                     return true
                 }
             }
@@ -75,4 +79,8 @@ class SearchActivity : BaseActivity() {
     }
 
     override fun getLayoutId(): Int = R.layout.search_activity
+
+    interface OnSearchTextListener {
+        fun onQueryTextSubmit(query: String): Boolean
+    }
 }

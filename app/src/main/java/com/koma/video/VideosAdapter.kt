@@ -19,6 +19,7 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.support.v7.app.AppCompatActivity
 import android.support.v7.util.DiffUtil
 import android.support.v7.widget.PopupMenu
 import android.support.v7.widget.RecyclerView
@@ -29,6 +30,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.koma.video.base.BaseAdapter
 import com.koma.video.data.enities.VideoEntry
+import com.koma.video.detail.DetailDialog
 import com.koma.video.play.PlayActivity
 import com.koma.video.util.GlideApp
 
@@ -86,6 +88,20 @@ class VideosAdapter(context: Context) : BaseAdapter<VideoEntry, VideosAdapter.Vi
                 R.id.iv_more -> {
                     val popupMenu = PopupMenu(view.context, view)
                     popupMenu.menuInflater.inflate(R.menu.item_video_menu, popupMenu.menu)
+                    popupMenu.setOnMenuItemClickListener {
+                        when (it.itemId) {
+                            R.id.action_detail -> {
+                                DetailDialog.show(
+                                    (context as AppCompatActivity).supportFragmentManager,
+                                    getItem(adapterPosition).id
+                                )
+                            }
+                            R.id.action_delete -> {
+                                notifyItemRemoved(adapterPosition)
+                            }
+                        }
+                        true
+                    }
                     popupMenu.show()
                 }
                 else -> {

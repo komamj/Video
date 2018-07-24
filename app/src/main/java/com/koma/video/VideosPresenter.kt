@@ -33,6 +33,10 @@ class VideosPresenter @Inject constructor(
         CompositeDisposable()
     }
 
+    init {
+        view.presenter = this
+    }
+
     override fun subscribe() {
         LogUtils.d(TAG, "subscribe")
 

@@ -70,6 +70,9 @@ class PlayActivity : BaseActivity(), PlayContract.View, GestureListener {
             )
         )
         video_view.setMediaController(media_controller)
+        video_view.setOnPreparedListener(MediaPlayer.OnPreparedListener {
+            setLoadingIndicator(false)
+        })
         video_view.setOnCompletionListener(MediaPlayer.OnCompletionListener {
             finish()
         })
@@ -105,7 +108,11 @@ class PlayActivity : BaseActivity(), PlayContract.View, GestureListener {
     }
 
     override fun setLoadingIndicator(active: Boolean) {
-        media_controller.setLoadingIndicator(active)
+        if (active) {
+            progress_bar.show()
+        } else {
+            progress_bar.hide()
+        }
     }
 
     override fun showTitle(title: String) {

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.koma.video.search
+package com.koma.video.detail
 
 import com.koma.video.data.source.VideoRepository
 import com.koma.video.util.LogUtils
@@ -23,11 +23,13 @@ import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
-class SearchPresenter @Inject constructor(
-    private val view: SearchContract.View,
+class DetailPresenter @Inject constructor(
+    private val view: DetailContract.View,
     private val repository: VideoRepository
-) : SearchContract.Presenter {
-    private val disposables = CompositeDisposable()
+) : DetailContract.Presenter {
+    private val disposables by lazy {
+        CompositeDisposable()
+    }
 
     init {
         view.presenter = this
@@ -43,26 +45,25 @@ class SearchPresenter @Inject constructor(
         disposables.clear()
     }
 
-
-    override fun loadVideoEntries(keyword: String) {
-        LogUtils.d(TAG, "loadVideoEntries keyword $keyword")
-
-        if (view.isActive) {
-            view.setLoadingIndicator(true)
+    override fun loadVideoEntryDetail(mediaId: Long) {
+        with(view) {
+            if (isActive) {
+                setLoadingIndicator(true)
+            }
         }
-        repository.getVideoEntries(keyword)
+
+        val disposable = repository.getVideoDetailEntry(mediaId)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeBy(
                 onNext = {
-                    if (view.isActive) {
-                        view.setEmptyIndicator(it.isEmpty())
-                        view.showVideoEntries(it)
+                    with(view) {
+                        if (isActive) {
+                            showVideoEntryDetail(it)
+                        }
                     }
                 },
                 onError = {
-                    LogUtils.e(TAG, "loadVideoEntries error ${it.message}")
-
                     with(view) {
                         if (isActive) {
                             setLoadingIndicator(false)
@@ -77,9 +78,10 @@ class SearchPresenter @Inject constructor(
                     }
                 }
             )
+        disposables.add(disposable)
     }
 
     companion object {
-        private const val TAG = "SearchPresenter"
+        private const val TAG = "VideoEntryDetail"
     }
 }

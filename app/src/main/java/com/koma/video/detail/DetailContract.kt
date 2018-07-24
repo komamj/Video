@@ -13,16 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.koma.video
+package com.koma.video.detail
 
-import android.content.Context
-import dagger.Module
-import dagger.Provides
-import javax.inject.Singleton
+import com.koma.video.base.BasePresenter
+import com.koma.video.base.BaseView
+import com.koma.video.data.enities.VideoEntryDetail
 
-@Module
-class ApplicationModule constructor(private val context: Context) {
-    @Singleton
-    @Provides
-    fun provideContext() = context
+interface DetailContract {
+    interface View : BaseView<Presenter> {
+        var isActive: Boolean
+
+        fun setLoadingIndicator(active: Boolean)
+
+        fun showVideoEntryDetail(videoEntryDetail: VideoEntryDetail)
+    }
+
+    interface Presenter : BasePresenter {
+        fun loadVideoEntryDetail(mediaId: Long)
+    }
 }

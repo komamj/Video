@@ -84,8 +84,6 @@ class VideoView constructor(context: Context, attrs: AttributeSet? = null) :
         override fun surfaceCreated(holder: SurfaceHolder) {
             LogUtils.i(TAG, "surfaceCreated")
 
-            mediaController?.setLoadingIndicator(true)
-
             surfaceHolder = holder
 
             openVideo()
@@ -317,8 +315,6 @@ class VideoView constructor(context: Context, attrs: AttributeSet? = null) :
 
             mediaController?.run {
                 isEnabled = true
-
-                setLoadingIndicator(false)
             }
             videoWidth = mp.videoWidth
             videoHeight = mp.videoHeight

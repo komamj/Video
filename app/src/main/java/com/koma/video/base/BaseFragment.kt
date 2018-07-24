@@ -24,9 +24,9 @@ import android.widget.TextView
 import kotlinx.android.synthetic.main.base_fragment.*
 
 abstract class BaseFragment : Fragment() {
-    protected var emptyView: TextView? = null
+    private var emptyView: TextView? = null
 
-    protected var viewCreated: Boolean = false
+    private var viewCreated: Boolean = false
 
     override fun onCreateView(
             inflater: LayoutInflater,

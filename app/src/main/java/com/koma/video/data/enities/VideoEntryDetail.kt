@@ -20,12 +20,12 @@ import android.text.format.Formatter
 import java.text.SimpleDateFormat
 import java.util.*
 
-data class VideoDetailEntry(
-    val displayName: String,
+data class VideoEntryDetail(
+    val title: String,
     private val duration: Int,
     private val dateTaken: Long,
     private val size: Long,
-    private val path: String
+    val path: String
 ) {
     fun formatDateTaken(): String {
         return SimpleDateFormat.getDateInstance().format(Date(dateTaken))
@@ -37,4 +37,7 @@ data class VideoDetailEntry(
 
     var formatDuration: String = "00:00"
         get() = VideoEntry.stringForTime(duration)
+
+    var format: String = ""
+        get() = path.substringAfterLast(".", "mp4")
 }

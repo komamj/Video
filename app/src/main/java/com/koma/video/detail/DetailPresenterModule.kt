@@ -13,16 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.koma.video
+package com.koma.video.detail
 
-import android.content.Context
 import dagger.Module
 import dagger.Provides
-import javax.inject.Singleton
 
 @Module
-class ApplicationModule constructor(private val context: Context) {
-    @Singleton
+class DetailPresenterModule constructor(private val view: DetailContract.View) {
     @Provides
-    fun provideContext() = context
+    fun provideDetailContractView() = view
 }

@@ -40,6 +40,7 @@ class MainActivity : BaseActivity() {
 
         super.onCreate(savedInstanceState)
     }
+
     override fun onPermissionGranted() {
         setSupportActionBar(toolbar)
 
@@ -82,14 +83,19 @@ class MainActivity : BaseActivity() {
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.search_menu, menu)
+
         return super.onCreateOptionsMenu(menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item?.itemId) {
             R.id.action_search -> {
-                startActivity(Intent(this, SearchActivity::class.java))
-                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
+                startActivity(
+                    Intent(
+                        this,
+                        SearchActivity::class.java
+                    ).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                )
             }
         }
         return super.onOptionsItemSelected(item)

@@ -13,16 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.koma.video
+package com.koma.video.detail
 
-import android.content.Context
-import dagger.Module
-import dagger.Provides
-import javax.inject.Singleton
+import com.koma.video.data.source.VideoRepositoryComponent
+import com.koma.video.util.FragmentScoped
+import dagger.Component
 
-@Module
-class ApplicationModule constructor(private val context: Context) {
-    @Singleton
-    @Provides
-    fun provideContext() = context
+@FragmentScoped
+@Component(
+    dependencies = [VideoRepositoryComponent::class],
+    modules = [DetailPresenterModule::class]
+)
+interface DetailComponent {
+    fun inject(dialog: DetailDialog)
 }

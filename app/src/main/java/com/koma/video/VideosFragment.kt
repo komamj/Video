@@ -19,8 +19,6 @@ import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
-import android.view.View
-import android.widget.TextView
 import com.koma.video.base.BaseFragment
 import com.koma.video.data.enities.VideoEntry
 import com.koma.video.util.LogUtils
@@ -46,15 +44,13 @@ class VideosFragment : BaseFragment(), VideosContract.View {
         LogUtils.d(TAG, "onActivityCreated")
 
         DaggerVideosComponent.builder()
-                .videoRepositoryComponent(
-                        ((context as AppCompatActivity).application as VideoApplication)
-                                .videoRepositoryComponent
-                )
-                .videosPresenterModule(VideosPresenterModule(this))
-                .build()
-                .inject(this)
-
-        presenter = videosPresenter
+            .videoRepositoryComponent(
+                ((context as AppCompatActivity).application as VideoApplication)
+                    .videoRepositoryComponent
+            )
+            .videosPresenterModule(VideosPresenterModule(this))
+            .build()
+            .inject(this)
 
         with(refresh_layout) {
             setColorSchemeColors(

@@ -26,6 +26,8 @@ interface SearchContract {
         fun setLoadingIndicator(active: Boolean)
 
         fun showVideoEntries(entries: List<VideoEntry>)
+
+        fun setEmptyIndicator(active: Boolean)
     }
 
     interface Presenter : BasePresenter {

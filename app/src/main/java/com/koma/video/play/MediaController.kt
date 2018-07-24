@@ -207,14 +207,6 @@ class MediaController @JvmOverloads constructor(
         updatePausePlay()
     }
 
-    fun setLoadingIndicator(active: Boolean) {
-        if (active) {
-            progress_bar.show()
-        } else {
-            progress_bar.hide()
-        }
-    }
-
     companion object {
         private const val TAG = "MediaController"
 

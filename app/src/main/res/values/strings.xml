@@ -14,4 +14,13 @@
 
     <!--hint-->
     <string name="search_hint">请输入关键字…</string>
+
+    <!--detail-->
+    <string name="title">标题</string>
+    <string name="duration">时长</string>
+    <string name="more">更多</string>
+    <string name="date_taken">时间: %s</string>
+    <string name="format">格式: %s</string>
+    <string name="size">大小: %s</string>
+    <string name="path">路径: %s</string>
 </resources>

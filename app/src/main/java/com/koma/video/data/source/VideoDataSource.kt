@@ -5,8 +5,9 @@ import android.content.ContentUris
 import android.content.Context
 import android.provider.MediaStore
 import com.koma.video.data.enities.BucketEntry
-import com.koma.video.data.enities.VideoDetailEntry
+import com.koma.video.data.enities.VideoEntryDetail
 import com.koma.video.data.enities.VideoEntry
+import com.koma.video.util.LogUtils
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
 import java.io.FileNotFoundException
@@ -126,7 +127,7 @@ class VideoDataSource @Inject constructor(private val context: Context) : IVideo
         }, BackpressureStrategy.LATEST)
     }
 
-    override fun getVideoDetailEntry(mediaId: Int): Flowable<VideoDetailEntry> {
+    override fun getVideoDetailEntry(mediaId: Long): Flowable<VideoEntryDetail> {
         return Flowable.create({
             val projection = arrayOf(
                 MediaStore.Video.Media.DISPLAY_NAME,
@@ -149,7 +150,7 @@ class VideoDataSource @Inject constructor(private val context: Context) : IVideo
             } else {
                 val entry = cursor.use {
                     it.moveToFirst()
-                    VideoDetailEntry(
+                    VideoEntryDetail(
                         it.getString(0),
                         it.getInt(1),
                         it.getLong(2),
@@ -188,8 +189,36 @@ class VideoDataSource @Inject constructor(private val context: Context) : IVideo
 
     override fun getVideoEntries(keyword: String): Flowable<List<VideoEntry>> {
         return Flowable.create({
-            val videoEntries = ArrayList<VideoEntry>()
-            it.onNext(videoEntries)
+            val entries = ArrayList<VideoEntry>()
+
+            val projection = arrayOf(
+                MediaStore.Video.Media._ID,
+                MediaStore.Video.Media.DISPLAY_NAME,
+                MediaStore.Video.Media.DURATION
+            )
+
+            val selection = MediaStore.Video.Media.DISPLAY_NAME + " LIKE '%$keyword%'"
+            LogUtils.d(TAG, "selection $selection")
+
+            val cursor =
+                resolver.query(
+                    MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
+                    projection,
+                    selection,
+                    null,
+                    SORT_ORDER
+                )
+            cursor?.use {
+                if (cursor.count > 0) {
+                    it.moveToFirst()
+                    do {
+                        val entry = VideoEntry(it.getLong(0), it.getString(1), it.getInt(2))
+                        entries.add(entry)
+                    } while (it.moveToNext())
+                }
+            }
+
+            it.onNext(entries)
             it.onComplete()
         }, BackpressureStrategy.LATEST)
     }
