@@ -20,7 +20,6 @@ import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.support.v7.app.AppCompatActivity
-import android.support.v7.util.DiffUtil
 import android.support.v7.widget.PopupMenu
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -34,18 +33,20 @@ import com.koma.video.detail.DetailDialog
 import com.koma.video.play.PlayActivity
 import com.koma.video.util.GlideApp
 
-class VideosAdapter(context: Context) : BaseAdapter<VideoEntry, VideosAdapter.VideosVH>(
-    context = context,
-    diffCallback = object : DiffUtil.ItemCallback<VideoEntry>() {
-        override fun areItemsTheSame(oldItem: VideoEntry, newItem: VideoEntry): Boolean {
-            return oldItem.id == newItem.id
-        }
-
-        override fun areContentsTheSame(oldItem: VideoEntry, newItem: VideoEntry): Boolean {
-            return oldItem == newItem
-        }
+class VideosAdapter(context: Context) :
+    BaseAdapter<VideoEntry, VideosAdapter.VideosVH>(context = context) {
+    override fun areItemsTheSame(oldItem: VideoEntry, newItem: VideoEntry): Boolean {
+        return oldItem.id == newItem.id
     }
-) {
+
+    override fun areContentsTheSame(oldItem: VideoEntry, newItem: VideoEntry): Boolean {
+        return oldItem == newItem
+    }
+
+    override fun getChangePayload(oldItem: VideoEntry, newItem: VideoEntry): Any? {
+        return null
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = VideosVH(
         LayoutInflater.from(context).inflate(R.layout.video_item, parent, false)
     )
@@ -53,26 +54,13 @@ class VideosAdapter(context: Context) : BaseAdapter<VideoEntry, VideosAdapter.Vi
     override fun onBindViewHolder(holder: VideosVH, position: Int) {
         val videoEntry = getItem(position)
 
-        bind(holder, videoEntry)
-    }
-
-    private fun bind(holder: VideosVH, entry: VideoEntry) {
-        GlideApp.with(context)
-            .asBitmap()
-            .placeholder(ColorDrawable(Color.GRAY))
-            .thumbnail(0.1f)
-            .load(entry.uri)
-            .into(holder.image)
-
-        holder.name.text = entry.displayName
-
-        holder.duration.text = entry.formatDuration
+        holder.bindTo(videoEntry)
     }
 
     inner class VideosVH(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
-        val image: ImageView
-        val duration: TextView
-        val name: TextView
+        private val image: ImageView
+        private val duration: TextView
+        private val name: TextView
 
         init {
             itemView.setOnClickListener(this)
@@ -80,6 +68,19 @@ class VideosAdapter(context: Context) : BaseAdapter<VideoEntry, VideosAdapter.Vi
             name = itemView.findViewById(R.id.tv_name)
             duration = itemView.findViewById(R.id.tv_duration)
             (itemView.findViewById(R.id.iv_more) as ImageView).setOnClickListener(this)
+        }
+
+        fun bindTo(entry: VideoEntry) {
+            GlideApp.with(context)
+                .asBitmap()
+                .placeholder(ColorDrawable(Color.GRAY))
+                .thumbnail(0.1f)
+                .load(entry.uri)
+                .into(image)
+
+            name.text = entry.displayName
+
+            duration.text = entry.formatDuration
         }
 
 
@@ -97,6 +98,7 @@ class VideosAdapter(context: Context) : BaseAdapter<VideoEntry, VideosAdapter.Vi
                                 )
                             }
                             R.id.action_delete -> {
+                                data.removeAt(adapterPosition)
                                 notifyItemRemoved(adapterPosition)
                             }
                         }

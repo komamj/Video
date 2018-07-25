@@ -79,8 +79,8 @@ class DetailDialog : BottomSheetDialogFragment(), DetailContract.View {
             tv_date_taken.text = getString(R.string.date_taken, videoEntryDetail.formatDateTaken())
             tv_format.text = getString(R.string.format, videoEntryDetail.format)
             tv_size.text = getString(R.string.size, videoEntryDetail.formatSize(this))
+            tv_path.text = getString(R.string.path, videoEntryDetail.path)
         }
-        tv_path.text = videoEntryDetail.path
         group.visibility = View.VISIBLE
     }
 

@@ -16,10 +16,12 @@
 package com.koma.video.data.enities
 
 import android.content.Context
+import android.support.annotation.Keep
 import android.text.format.Formatter
 import java.text.SimpleDateFormat
 import java.util.*
 
+@Keep
 data class VideoEntryDetail(
     val title: String,
     private val duration: Int,

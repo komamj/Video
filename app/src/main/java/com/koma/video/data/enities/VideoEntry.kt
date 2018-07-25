@@ -18,8 +18,10 @@ package com.koma.video.data.enities
 import android.content.ContentUris
 import android.net.Uri
 import android.provider.MediaStore
+import android.support.annotation.Keep
 import java.util.*
 
+@Keep
 data class VideoEntry constructor(
     val id: Long,
     val displayName: String,

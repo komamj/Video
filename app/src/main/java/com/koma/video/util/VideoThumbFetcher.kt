@@ -52,7 +52,7 @@ class VideoThumbFetcher(private val context: Context, private val bucketEntry: B
 
     override fun loadData(priority: Priority, callback: DataFetcher.DataCallback<in InputStream>) {
         val projection = arrayOf(MediaStore.Video.Media._ID)
-        val selection = MediaStore.Video.Media.BUCKET_ID + " = " + bucketEntry.buketId
+        val selection = MediaStore.Video.Media.BUCKET_ID + " = " + bucketEntry.bucketId
         val sortOrder = MediaStore.Video.Media.DATE_TAKEN + " DESC"
         val resolver = context.applicationContext.contentResolver
         val cursor = resolver.query(

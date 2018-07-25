@@ -16,9 +16,11 @@
 package com.koma.video.data.enities
 
 import android.net.Uri
+import android.support.annotation.Keep
 
+@Keep
 data class BucketEntry(
-    val buketId: Int,
+    val bucketId: Int,
     val name: String
 ) {
     var dateTaken: Int = 0
