@@ -97,7 +97,7 @@ abstract class BaseAdapter<T, VH : RecyclerView.ViewHolder> constructor(
                     it.dispatchUpdatesTo(this)
                 },
                 onError = {
-                    LogUtils.e("BaseAdapter", "diffutil error : ${it.message}")
+                    LogUtils.e(TAG, "calculate diff data error : ${it.message}")
                 },
                 onComplete = {
 
@@ -115,10 +115,10 @@ abstract class BaseAdapter<T, VH : RecyclerView.ViewHolder> constructor(
         return data[position]
     }
 
-    override fun onViewDetachedFromWindow(holder: VH) {
-        super.onViewDetachedFromWindow(holder)
+    override fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {
+        super.onDetachedFromRecyclerView(recyclerView)
 
-        LogUtils.d(TAG, "onViewDetachedFromWindow")
+        LogUtils.d(TAG, "onDetachedFromRecyclerView")
 
         disposables.clear()
     }
