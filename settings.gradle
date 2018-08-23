@@ -1,1 +1,1 @@
-include ':app', ':buglylibrary'
+include ':app'

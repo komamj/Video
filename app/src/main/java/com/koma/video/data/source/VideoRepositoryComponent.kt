@@ -20,7 +20,7 @@ import dagger.Component
 import javax.inject.Singleton
 
 @Singleton
-@Component(modules = [(ApplicationModule::class), (VideoRepositoryModule::class)])
+@Component(modules = arrayOf(ApplicationModule::class, VideoRepositoryModule::class))
 interface VideoRepositoryComponent {
     fun getRepository(): VideoRepository
 }
